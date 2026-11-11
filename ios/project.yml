@@ -40,6 +40,7 @@ targets:
 
 
           - ranchig
+          - ranchsp
         UILaunchScreen:
           UIColorName: LaunchBackground
         UIStatusBarStyle: UIStatusBarStyleLightContent
