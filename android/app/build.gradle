@@ -9,6 +9,10 @@ def pkg = new JsonSlurper().parse(rootProject.file('../package.json'))
 def appVersion = pkg.version as String
 def (major, minor, patch) = appVersion.tokenize('.').collect { it.replaceAll(/\D.*/, '') as int }
 
+// For testing the launcher's self-update: `-PversionNameOverride=0.0.9` makes this build report an older version.
+def versionNameOverride = project.findProperty('versionNameOverride') as String
+def reportedVersion = versionNameOverride ?: appVersion
+
 // Same release key as the YouTube Music app (see ~/.gradle/gradle.properties).
 def hasReleaseKey = project.hasProperty('YTM_KEYSTORE') && file(project.property('YTM_KEYSTORE')).exists()
 
@@ -37,7 +41,7 @@ android {
         minSdk 26
         targetSdk 35
         versionCode major * 10000 + minor * 100 + patch
-        versionName appVersion
+        versionName reportedVersion
     }
 
     sourceSets {
@@ -73,7 +77,7 @@ android {
 
     applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "Ranch-Launcher-Android-${appVersion}.apk"
+            outputFileName = "Ranch-Launcher-Android-${reportedVersion}.apk"
         }
     }
 }

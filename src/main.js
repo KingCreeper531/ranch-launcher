@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, shell, dialog } = 
 const path = require('path');
 const fs = require('fs');
 const apps = require('./apps');
+const selfUpdate = require('./self-update');
 
 app.setAppUserModelId('local.ranch.launcher');
 app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion'); // keep drawing when covered
@@ -88,7 +89,10 @@ function updateTray() {
     ...items,
     ...(items.length ? [{ type: 'separator' }] : []),
     { label: 'Show Ranch Launcher', click: showWindow },
-    { label: 'Check for updates', click: () => refreshAll(true) },
+    ...(selfUpdate.getState().status === 'ready'
+      ? [{ label: `Restart to update the launcher (${selfUpdate.getState().version})`, click: () => selfUpdate.install() }]
+      : []),
+    { label: 'Check for updates', click: () => { refreshAll(true); selfUpdate.check(); } },
     { type: 'separator' },
     { label: 'Quit', click: () => { quitting = true; app.quit(); } },
   ]));
@@ -125,6 +129,10 @@ async function refreshAll(andUpdate = false) {
 }
 
 // ------------------------------------------------------------------ IPC
+// The launcher's own updates
+ipcMain.handle('launcher:update-get', () => selfUpdate.getState());
+ipcMain.handle('launcher:update-install', () => selfUpdate.install());
+
 ipcMain.handle('apps:list', () => apps.list());
 ipcMain.handle('apps:refresh', () => refreshAll(false).then(() => apps.list()));
 ipcMain.handle('apps:install', async (_e, id) => {
@@ -178,6 +186,11 @@ app.whenReady().then(async () => {
   apps.init({
     log,
     onChange: (id, view) => win?.webContents.send('apps:changed', view),
+  });
+  selfUpdate.init({
+    log,
+    onChange: (s) => { win?.webContents.send('launcher:update', s); updateTray(); },
+    beforeInstall: () => { quitting = true; },
   });
   createWindow(!process.argv.includes('--hidden'));
   tray = new Tray(nativeImage.createFromPath(ICON).resize({ width: 16, height: 16 }));

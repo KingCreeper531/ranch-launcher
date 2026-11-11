@@ -39,6 +39,14 @@ button:disabled { cursor: default; }
 .brand img { width: 30px; height: 30px; object-fit: contain; }
 .brand span { font: 600 22px/1 var(--display); letter-spacing: -0.01em; }
 
+.top-actions { display: flex; align-items: center; gap: 18px; }
+.update-pill {
+  background: var(--green); color: #0b100c; font-weight: 700; font-size: 12.5px;
+  padding: 7px 14px; border-radius: 999px; transition: background 0.15s;
+}
+.update-pill:hover:not(:disabled) { background: #6cc75a; }
+.update-pill:disabled { background: #2a3a27; color: var(--ink-soft); }
+
 .link { color: var(--ink-soft); text-decoration: underline; text-decoration-color: rgba(239, 232, 212, 0.25); text-underline-offset: 4px; }
 .link:hover:not(:disabled) { color: var(--ink); text-decoration-color: currentColor; }
 .link.quiet { text-decoration: none; font-size: 13px; }

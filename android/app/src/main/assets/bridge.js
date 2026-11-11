@@ -5,6 +5,7 @@
   var pending = {};
   var nextId = 1;
   var changed = [];
+  var launcherUpdate = [];
 
   function call(method) {
     var args = Array.prototype.slice.call(arguments, 1);
@@ -32,9 +33,18 @@
     delete pending[id];
     p.reject(new Error(message));
   };
+  function subscribe(list, fn) {
+    list.push(fn);
+    return function () {
+      var i = list.indexOf(fn);
+      if (i >= 0) list.splice(i, 1);
+    };
+  }
+
   window.__ranchEmit = function (type, payload) {
-    if (type !== 'changed') return;
-    changed.slice().forEach(function (fn) {
+    var list = type === 'changed' ? changed : type === 'launcher-update' ? launcherUpdate : null;
+    if (!list) return;
+    list.slice().forEach(function (fn) {
       try { fn(payload); } catch (e) { console.error(e); }
     });
   };
@@ -52,12 +62,10 @@
     appSettings: function () { return Promise.resolve(null); },
     setAppSettings: function () { return Promise.resolve(null); },
     onAppSettingsChanged: function () { return function () {}; },
-    onChanged: function (fn) {
-      changed.push(fn);
-      return function () {
-        var i = changed.indexOf(fn);
-        if (i >= 0) changed.splice(i, 1);
-      };
-    },
+    onChanged: function (fn) { return subscribe(changed, fn); },
+    // The launcher's own updates
+    launcherUpdate: function () { return call('launcherUpdate'); },
+    installLauncherUpdate: function () { return call('installLauncherUpdate'); },
+    onLauncherUpdate: function (fn) { return subscribe(launcherUpdate, fn); },
   };
 })();

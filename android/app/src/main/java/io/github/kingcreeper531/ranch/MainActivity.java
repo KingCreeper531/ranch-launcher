@@ -39,9 +39,11 @@ public class MainActivity extends Activity {
     static final String HOME = ORIGIN + "/assets/ui/index.html";
     private static final long CHECK_EVERY_MS = 30L * 60 * 1000;        // every 30 minutes while open
     private static final long RESUME_CHECK_GAP_MS = 10L * 60 * 1000;   // and when you come back after a while
+    private static final long FIRST_SELF_CHECK_MS = 3000;               // the launcher's own update, soon after start
 
     private WebView web;
     private Apps apps;
+    private LauncherUpdate self;
     private String bridgeJs = "";
     private boolean documentStartScript;
     private final Handler main = new Handler(Looper.getMainLooper());
@@ -50,6 +52,13 @@ public class MainActivity extends Activity {
     private final Runnable periodic = new Runnable() {
         @Override public void run() {
             io.execute(() -> apps.refresh());
+            main.postDelayed(this, CHECK_EVERY_MS);
+        }
+    };
+
+    private final Runnable selfPeriodic = new Runnable() {
+        @Override public void run() {
+            io.execute(() -> self.check());
             main.postDelayed(this, CHECK_EVERY_MS);
         }
     };
@@ -67,6 +76,7 @@ public class MainActivity extends Activity {
         if (BuildConfig.DEBUG) WebView.setWebContentsDebuggingEnabled(true);
 
         apps = new Apps(this, view -> emit("changed", view.toString()));
+        self = new LauncherUpdate(this, () -> apps.autoUpdate(), view -> emit("launcher-update", view.toString()));
 
         web = new WebView(this);
         web.setBackgroundColor(0xFF0B100C);
@@ -126,6 +136,8 @@ public class MainActivity extends Activity {
 
         // Check for updates now and every 30 minutes while the launcher is open
         main.post(periodic);
+        // ...and for a new version of the launcher itself a few seconds after start, then every 30 minutes
+        main.postDelayed(selfPeriodic, FIRST_SELF_CHECK_MS);
     }
 
     /** Pushes an event to the page (any thread). */
@@ -185,8 +197,16 @@ public class MainActivity extends Activity {
                 return "null";
             case "getSettings":
                 return apps.settings().toString();
-            case "setSettings":
-                return apps.setSettings(args.optJSONObject(0)).toString();
+            case "setSettings": {
+                JSONObject result = apps.setSettings(args.optJSONObject(0));
+                if (apps.autoUpdate()) io.execute(() -> self.autoDownload());   // in the background
+                return result.toString();
+            }
+            case "launcherUpdate":
+                return self.view().toString();
+            case "installLauncherUpdate":
+                self.install();
+                return "null";
             default:
                 throw new Exception("Unknown method: " + method);
         }
@@ -200,6 +220,10 @@ public class MainActivity extends Activity {
         apps.onResume();
         if (apps.lastCheck > 0 && System.currentTimeMillis() - apps.lastCheck > RESUME_CHECK_GAP_MS) {
             io.execute(() -> apps.refresh());
+        }
+        self.onResume();
+        if (self.lastCheck > 0 && System.currentTimeMillis() - self.lastCheck > RESUME_CHECK_GAP_MS) {
+            io.execute(() -> self.check());
         }
     }
 
@@ -218,6 +242,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         main.removeCallbacks(periodic);
+        main.removeCallbacks(selfPeriodic);
         try { unregisterReceiver(packages); } catch (Exception ignored) { }
         io.shutdownNow();
         web.destroy();

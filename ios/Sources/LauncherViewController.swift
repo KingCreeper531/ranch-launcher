@@ -10,6 +10,7 @@ final class LauncherViewController: UIViewController, WKNavigationDelegate, WKUI
     private var web: WKWebView!
     private var schemeHandler: BundleSchemeHandler?
     private let store = AppStore()
+    private let updater = LauncherUpdater()
 
     override var preferredStatusBarStyle: UIStatusBarStyle { .lightContent }
 
@@ -65,6 +66,9 @@ final class LauncherViewController: UIViewController, WKNavigationDelegate, WKUI
         store.onChange = { [weak self] id in self?.emit(id) }
         store.refresh {}
 
+        updater.onChange = { [weak self] in self?.emitLauncherUpdate() }
+        updater.start()
+
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground),
                                                name: UIApplication.willEnterForegroundNotification, object: nil)
     }
@@ -75,6 +79,7 @@ final class LauncherViewController: UIViewController, WKNavigationDelegate, WKUI
         if Date().timeIntervalSince(store.lastRefresh) > 10 * 60 {
             store.refresh {}
         }
+        updater.checkIfStale()
     }
 
     // MARK: - window.ranch
@@ -85,13 +90,20 @@ final class LauncherViewController: UIViewController, WKNavigationDelegate, WKUI
     (function () {
       if (window.ranch) return;
       var listeners = [];
+      var updateListeners = [];
       function call(method, args) {
         return window.webkit.messageHandlers.ranch.postMessage({ method: method, args: args || [] })
           .then(function (reply) { return typeof reply === 'string' ? JSON.parse(reply) : (reply === undefined ? null : reply); });
       }
       function idArg(id) { return [id == null ? '' : String(id)]; }
-      window.__ranchEmit = function (view) {
-        listeners.slice().forEach(function (fn) { try { fn(view); } catch (e) { console.error(e); } });
+      function subscribe(list, fn) {
+        list.push(fn);
+        return function () { var i = list.indexOf(fn); if (i >= 0) list.splice(i, 1); };
+      }
+      // __ranchEmit(view) is an app change; __ranchEmit(view, 'launcher-update') is the launcher's own update
+      window.__ranchEmit = function (view, event) {
+        var list = event === 'launcher-update' ? updateListeners : listeners;
+        list.slice().forEach(function (fn) { try { fn(view); } catch (e) { console.error(e); } });
       };
       window.ranch = {
         platform: 'ios',
@@ -106,10 +118,10 @@ final class LauncherViewController: UIViewController, WKNavigationDelegate, WKUI
         appSettings: function (id) { return call('appSettings', idArg(id)); },
         setAppSettings: function (id, patch) { return call('setAppSettings', idArg(id)); },
         onAppSettingsChanged: function (fn) { return function () {}; },
-        onChanged: function (fn) {
-          listeners.push(fn);
-          return function () { var i = listeners.indexOf(fn); if (i >= 0) listeners.splice(i, 1); };
-        }
+        onChanged: function (fn) { return subscribe(listeners, fn); },
+        launcherUpdate: function () { return call('launcherUpdate'); },
+        installLauncherUpdate: function () { return call('installLauncherUpdate').then(function () {}); },
+        onLauncherUpdate: function (fn) { return subscribe(updateListeners, fn); }
       };
     })();
     """
@@ -146,6 +158,12 @@ final class LauncherViewController: UIViewController, WKNavigationDelegate, WKUI
             reply(settings)
         case "setSettings":
             reply([String: Any]())
+        case "launcherUpdate":
+            reply(updater.view())
+        case "installLauncherUpdate":
+            // iOS can't update itself: open the release page, where the new .ipa is
+            openExternal(updater.installURL())
+            reply(NSNull())
         case "uninstall", "appSettings", "setAppSettings":
             reply(NSNull())
         default:
@@ -157,6 +175,13 @@ final class LauncherViewController: UIViewController, WKNavigationDelegate, WKUI
     private func emit(_ id: String) {
         guard let web, let app = store.entry(id) else { return }
         web.evaluateJavaScript("window.__ranchEmit && window.__ranchEmit(\(Self.json(store.view(app))));",
+                               completionHandler: nil)
+    }
+
+    /// Tells the window the launcher's own update status changed (window.ranch.onLauncherUpdate listeners).
+    private func emitLauncherUpdate() {
+        guard let web else { return }
+        web.evaluateJavaScript("window.__ranchEmit && window.__ranchEmit(\(Self.json(updater.view())), 'launcher-update');",
                                completionHandler: nil)
     }
 

@@ -57,7 +57,11 @@ if (-not $apk) { throw 'Android build produced no APK' }
 Copy-Item $apk.FullName "dist\Ranch-Launcher-Android-$version.apk" -Force
 $apk = "dist\Ranch-Launcher-Android-$version.apk"
 
-foreach ($f in $exe, $apk) { if (-not (Test-Path $f)) { throw "Missing build output: $f" } }
+# The Windows launcher updates itself from these two files
+$latestYml = 'dist\latest.yml'
+$blockmap = "$exe.blockmap"
+
+foreach ($f in $exe, $apk, $latestYml, $blockmap) { if (-not (Test-Path $f)) { throw "Missing build output: $f" } }
 
 # ---------------------------------------------------------------- source to GitHub
 Run git @('-C', $root, 'add', 'launcher')
@@ -77,6 +81,6 @@ if (-not $Notes) {
 Windows may show a SmartScreen warning because the launcher isn't code-signed. Click **More info**, then **Run anyway**.
 "@
 }
-$ghArgs = @('release', 'create', "v$version", '--repo', $repo, '--target', 'main', '--title', "Ranch Launcher v$version", '--notes', $Notes, $exe, $apk)
+$ghArgs = @('release', 'create', "v$version", '--repo', $repo, '--target', 'main', '--title', "Ranch Launcher v$version", '--notes', $Notes, $exe, $blockmap, $latestYml, $apk)
 Run gh $ghArgs
 Write-Host "Published https://github.com/$repo/releases/tag/v$version (the .ipa follows in a few minutes)" -ForegroundColor Green

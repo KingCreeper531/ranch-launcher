@@ -236,6 +236,26 @@ function Settings({ settings, onChange }) {
   );
 }
 
+/** Shown only when a newer Ranch Launcher is out. */
+function LauncherUpdateButton({ s }) {
+  if (!s || !s.version) return null;
+  let label = null;
+  let busy = false;
+  if (s.status === 'available') label = PLATFORM === 'ios' ? `Get launcher ${s.version}` : `Update launcher to ${s.version}`;
+  else if (s.status === 'downloading') { label = s.percent != null ? `Updating launcher ${s.percent}%` : 'Updating launcher'; busy = true; }
+  else if (s.status === 'ready') label = PLATFORM === 'android' ? 'Install launcher update' : 'Restart to update';
+  else if (s.status === 'error') label = 'Retry launcher update';
+  if (!label) return null;
+  return (
+    <AnimatedContent key={s.status} trigger="mount" distance={8} duration={0.35} ease="power2.out">
+      <button className="update-pill" disabled={busy} title={s.error || `Ranch Launcher ${s.version} is out (you have ${s.current})`}
+        onClick={() => api.installLauncherUpdate()}>
+        {label}
+      </button>
+    </AnimatedContent>
+  );
+}
+
 const GearIcon = () => (
   <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
     <path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5-2.1-1.6ZM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z" transform="translate(-1 0)" />
@@ -247,6 +267,17 @@ export default function App() {
   const [selected, setSelected] = useState(null);
   const [settings, setSettings] = useState({});
   const [checking, setChecking] = useState(false);
+  const [selfUpd, setSelfUpd] = useState(null);
+
+  // The launcher's own updates (every device reports these the same way)
+  useEffect(() => {
+    if (!api.launcherUpdate) return undefined;
+    // A routine re-check shouldn't make an already-shown update button blink away
+    const apply = (s) => setSelfUpd((prev) => (
+      s && s.status === 'checking' && prev && ['available', 'downloading', 'ready'].includes(prev.status) ? prev : s));
+    api.launcherUpdate().then(apply).catch(() => {});
+    return api.onLauncherUpdate ? api.onLauncherUpdate(apply) : undefined;
+  }, []);
 
   useEffect(() => {
     api.list().then((list) => {
@@ -297,7 +328,10 @@ export default function App() {
 
       <header className="topbar">
         <div className="brand"><img src="icons/ranch.png" alt="" /><span>Ranch</span></div>
-        <button className="link quiet" onClick={checkNow} disabled={checking}>{checking ? 'Checking' : 'Check for updates'}</button>
+        <div className="top-actions">
+          <LauncherUpdateButton s={selfUpd} />
+          <button className="link quiet" onClick={checkNow} disabled={checking}>{checking ? 'Checking' : 'Check for updates'}</button>
+        </div>
       </header>
 
       <main className="main">

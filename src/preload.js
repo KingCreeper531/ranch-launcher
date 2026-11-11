@@ -17,6 +17,14 @@ contextBridge.exposeInMainWorld('ranch', {
     return () => ipcRenderer.removeListener('apps:settings-changed', handler);
   },
   getSettings: () => ipcRenderer.invoke('settings:get'),
+  // The launcher's own updates
+  launcherUpdate: () => ipcRenderer.invoke('launcher:update-get'),
+  installLauncherUpdate: () => ipcRenderer.invoke('launcher:update-install'),
+  onLauncherUpdate: (fn) => {
+    const handler = (_e, s) => fn(s);
+    ipcRenderer.on('launcher:update', handler);
+    return () => ipcRenderer.removeListener('launcher:update', handler);
+  },
   setSettings: (patch) => ipcRenderer.invoke('settings:set', patch),
   onChanged: (fn) => ipcRenderer.on('apps:changed', (_e, view) => fn(view)),
 });
