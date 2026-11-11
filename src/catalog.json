@@ -410,7 +410,7 @@
   {
     "id": "twitter",
     "name": "Twitter",
-    "tagline": "Twitter without promoted posts, Grok or Premium upsells, with the classic look and the Following tab first.",
+    "tagline": "Twitter without promoted posts, Grok or Premium upsells, in the classic 2018 layout with the blue bird.",
     "repo": "KingCreeper531/twitter-desktop",
     "ios": {
       "assetPattern": "^Twitter-iOS-[0-9.]+\\.ipa$",
@@ -444,11 +444,18 @@
         "group": "Look"
       },
       {
+        "key": "classicLayout",
+        "type": "toggle",
+        "default": true,
+        "label": "Classic 2018 layout (Windows)",
+        "help": "Twitter as it looked in 2018: top bar, bird in the middle, old Home, profiles, Tweets and notifications. Messages, search and settings use the new pages"
+      },
+      {
         "key": "classicTwitter",
         "type": "toggle",
         "default": true,
-        "label": "Classic Twitter",
-        "help": "The blue bird logo and the old words: Tweet, Retweet, Tweets and \"What's happening?\""
+        "label": "Classic Twitter words and bird",
+        "help": "On the new pages: the blue bird logo and the old words: Tweet, Retweet, Tweets and \"What's happening?\""
       },
       {
         "group": "Timeline"
