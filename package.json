@@ -1,7 +1,7 @@
 {
   "name": "ranch-launcher",
   "productName": "Ranch Launcher",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Installs, updates and launches Ranch apps (YouTube Music and more)",
   "repository": "https://github.com/KingCreeper531/ranch-launcher",
   "main": "src/main.js",
