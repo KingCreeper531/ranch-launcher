@@ -94,7 +94,8 @@ async function detect() {
     if (a.comingSoon) continue;
     // "YouTube 1.0.0" is YouTube, but "YouTube Music 1.1.6" is not: only a version may follow the name
     const named = new RegExp(`^${a.uninstallName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\s+v?\\d[\\d.]*)?$`);
-    const e = entries.find((x) => named.test(x.DisplayName));
+    // A publisher tells same-named apps apart (this Spotify vs. the official Spotify app)
+    const e = entries.find((x) => named.test(x.DisplayName) && (!a.publisher || x.Publisher === a.publisher));
     const exePath = e ? exeFromEntry(e, a.exeName) : null;
     if (e && exePath) {
       set(a.id, {
