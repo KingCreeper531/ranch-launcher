@@ -1,0 +1,7 @@
+.gradle/
+.gradle-home/
+build/
+app/build/
+local.properties
+# UI and catalog copied in from ../src at build time (app/build/generated/ranch-assets)
+app/build/generated/

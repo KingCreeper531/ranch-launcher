@@ -1,0 +1,62 @@
+# Xcode project definition. GitHub's Mac build turns this into an Xcode
+# project with XcodeGen (see .github/workflows/ios.yml).
+#
+# Before `xcodegen generate`, the build copies the launcher window and the app list in:
+#   ../src/ui           -> Resources/ui            (built by `npm run build:ui`)
+#   ../src/catalog.json -> Resources/catalog.json
+name: RanchLauncher
+options:
+  bundleIdPrefix: io.github.kingcreeper531
+  deploymentTarget:
+    iOS: "15.0"
+targets:
+  RanchLauncher:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+      - path: Resources/Assets.xcassets
+      - path: Resources/catalog.json
+        buildPhase: resources
+      # Copied as a folder, so the app bundle keeps ui/index.html, ui/assets/..., ui/icons/...
+      - path: Resources/ui
+        type: folder
+        buildPhase: resources
+    info:
+      path: Sources/Info.plist
+      properties:
+        CFBundleDisplayName: Ranch Launcher
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSRequiresIPhoneOS: true
+        # Every "urlScheme" in catalog.json, so the launcher can see which apps are installed
+        LSApplicationQueriesSchemes:
+          - ranchytm
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UIStatusBarStyle: UIStatusBarStyleLightContent
+        UIUserInterfaceStyle: Dark
+        UIViewControllerBasedStatusBarAppearance: true
+        UIRequiresFullScreen: false
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.kingcreeper531.ranch
+        PRODUCT_NAME: RanchLauncher
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        SWIFT_VERSION: "5.0"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGN_IDENTITY: ""

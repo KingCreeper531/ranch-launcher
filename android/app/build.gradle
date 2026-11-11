@@ -1,0 +1,87 @@
+import groovy.json.JsonSlurper
+
+plugins {
+    id 'com.android.application'
+}
+
+// One version number for Windows and Android: read it from launcher/package.json
+def pkg = new JsonSlurper().parse(rootProject.file('../package.json'))
+def appVersion = pkg.version as String
+def (major, minor, patch) = appVersion.tokenize('.').collect { it.replaceAll(/\D.*/, '') as int }
+
+// Same release key as the YouTube Music app (see ~/.gradle/gradle.properties).
+def hasReleaseKey = project.hasProperty('YTM_KEYSTORE') && file(project.property('YTM_KEYSTORE')).exists()
+
+// The launcher's window (built by `npm run build:ui`) and the app catalog are shared with Windows.
+def launcherSrc = rootProject.file('../src')
+def generatedAssets = layout.buildDirectory.dir('generated/ranch-assets')
+
+def copyLauncherUi = tasks.register('copyLauncherUi', Sync) {
+    def ui = new File(launcherSrc, 'ui')
+    doFirst {
+        if (!new File(ui, 'index.html').exists()) {
+            throw new GradleException("Launcher UI not built: ${new File(ui, 'index.html')} is missing. Run `npm run build:ui` in the launcher folder first.")
+        }
+    }
+    into generatedAssets
+    from(ui) { into 'ui' }
+    from(new File(launcherSrc, 'catalog.json'))
+}
+
+android {
+    namespace 'io.github.kingcreeper531.ranch'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'io.github.kingcreeper531.ranch'
+        minSdk 26
+        targetSdk 35
+        versionCode major * 10000 + minor * 100 + patch
+        versionName appVersion
+    }
+
+    sourceSets {
+        main.assets.srcDirs += generatedAssets.get().asFile
+    }
+
+    signingConfigs {
+        if (hasReleaseKey) {
+            release {
+                storeFile file(project.property('YTM_KEYSTORE'))
+                storePassword project.property('YTM_KEYSTORE_PASSWORD')
+                keyAlias project.property('YTM_KEY_ALIAS')
+                keyPassword project.property('YTM_KEY_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig hasReleaseKey ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "Ranch-Launcher-Android-${appVersion}.apk"
+        }
+    }
+}
+
+tasks.named('preBuild') { dependsOn copyLauncherUi }
+tasks.matching { it.name.startsWith('merge') && it.name.endsWith('Assets') }.configureEach { dependsOn copyLauncherUi }
+
+dependencies {
+    implementation 'androidx.webkit:webkit:1.12.1'
+    implementation 'androidx.core:core:1.13.1'
+}

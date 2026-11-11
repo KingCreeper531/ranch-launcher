@@ -40,6 +40,8 @@ function view(id) {
     running: !!s.running, busy: s.busy || null, progress: s.progress ?? null, error: s.error || null,
     // From the latest GitHub release
     notes: s.notes || '', publishedAt: s.publishedAt || null, size: s.assetSize || 0,
+    // What this launcher can do for the app on Windows
+    hasSettings: !!a.settings, canUninstall: true,
   };
 }
 

@@ -159,7 +159,12 @@ ipcMain.handle('apps:github', (_e, id) => {
 // Each app's own settings (edited in the launcher, saved into the app's settings file)
 ipcMain.handle('apps:settings-get', (_e, id) => apps.getAppSettings(String(id)));
 ipcMain.handle('apps:settings-set', (_e, id, patch) => apps.setAppSettings(String(id), patch));
-ipcMain.handle('settings:get', () => ({ ...getSettings(), version: app.getVersion() }));
+const SETTING_ROWS = [
+  { key: 'autoUpdate', title: 'Keep apps up to date', help: 'Downloads each new version as soon as it is released. It installs straight away, or the moment you close the app if it is open.' },
+  { key: 'startWithWindows', title: 'Start with Windows', help: 'Opens in the tray when you sign in, so updates keep coming.' },
+  { key: 'closeToTray', title: 'Close to tray', help: 'Closing the window keeps the launcher running in the tray.' },
+];
+ipcMain.handle('settings:get', () => ({ ...getSettings(), version: app.getVersion(), rows: SETTING_ROWS }));
 ipcMain.handle('settings:set', (_e, patch) => {
   const allowed = {};
   for (const k of Object.keys(DEFAULTS)) if (k in (patch || {})) allowed[k] = !!patch[k];

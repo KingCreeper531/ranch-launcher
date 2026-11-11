@@ -1,0 +1,94 @@
+# Builds the unsigned iPhone/iPad launcher (.ipa) on GitHub's Mac machines and attaches it
+# to the release. Install it with AltStore or Sideloadly using your Apple ID.
+name: iOS build
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to attach the .ipa to (for example v0.1.0). Leave empty to only build.
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # A release builds its own tag; a manual run builds the current code
+          ref: ${{ github.event.release.tag_name || github.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install packages
+        # Electron itself isn't needed to build the window
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+        run: npm ci
+
+      - name: Build the launcher window
+        run: npm run build:ui
+
+      - name: Copy the window and app list into the iOS app
+        run: |
+          rm -rf ios/Resources/ui
+          cp -R src/ui ios/Resources/ui
+          cp src/catalog.json ios/Resources/catalog.json
+          test -f ios/Resources/ui/index.html
+          # Every app's urlScheme must be in LSApplicationQueriesSchemes, or the launcher can't see it's installed
+          node -e '
+            const lines = require("fs").readFileSync("ios/project.yml", "utf8").split("\n").map((l) => l.trim());
+            const missing = require("./src/catalog.json")
+              .map((a) => a.ios && a.ios.urlScheme).filter(Boolean)
+              .filter((s) => !lines.includes("- " + s));
+            if (missing.length) { console.error("Add to LSApplicationQueriesSchemes in ios/project.yml: " + missing.join(", ")); process.exit(1); }
+          '
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: ios
+        run: xcodegen generate
+
+      - name: Build
+        working-directory: ios
+        run: |
+          VERSION=$(node -p "require('../package.json').version")
+          IFS=. read -r MAJ MIN PAT <<< "$VERSION"
+          BUILD=$((MAJ * 10000 + MIN * 100 + PAT))
+          set -o pipefail
+          xcodebuild -project RanchLauncher.xcodeproj -target RanchLauncher \
+            -configuration Release -sdk iphoneos \
+            SYMROOT="$PWD/build" \
+            MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="$BUILD" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            build | tail -n 40
+          test -d build/Release-iphoneos/RanchLauncher.app
+          test -f build/Release-iphoneos/RanchLauncher.app/ui/index.html
+          rm -rf Payload && mkdir Payload
+          cp -R build/Release-iphoneos/RanchLauncher.app Payload/
+          IPA="Ranch-Launcher-iOS-$VERSION.ipa"
+          zip -qry "$IPA" Payload
+          echo "IPA=ios/$IPA" >> "$GITHUB_ENV"
+          ls -la "$IPA"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ipa
+          path: ${{ env.IPA }}
+
+      - name: Attach to the release
+        if: github.event_name == 'release' || inputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh release upload "${{ github.event.release.tag_name || inputs.tag }}" "$IPA" --clobber

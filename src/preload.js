@@ -1,6 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('ranch', {
+  platform: 'windows',
   list: () => ipcRenderer.invoke('apps:list'),
   refresh: () => ipcRenderer.invoke('apps:refresh'),
   install: (id) => ipcRenderer.invoke('apps:install', id),

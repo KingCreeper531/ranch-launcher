@@ -13,6 +13,9 @@ import GradualBlur from './react-bits/GradualBlur.jsx';
 import Notes from './Notes.jsx';
 
 const api = window.ranch;
+// 'windows', 'android' or 'ios': each launcher says which device it runs on
+const PLATFORM = api.platform || 'windows';
+const IS_PHONE = PLATFORM === 'android' || PLATFORM === 'ios';
 
 const CREAM = '#efe8d4';
 const GREEN = '#5cb84a';
@@ -36,10 +39,17 @@ function statusOf(a) {
 
 function primaryAction(a) {
   if (a.comingSoon) return { label: 'Not released yet', disabled: true };
+  if (a.unavailable) return { label: 'Not on this device yet', disabled: true };
   if (a.busy) return { label: a.busy === 'uninstalling' ? 'Uninstalling' : 'Working', disabled: true };
+  // iPhones can't install apps from another app: these open the download page
+  if (PLATFORM === 'ios') {
+    if (!a.installed) return { label: 'Get it', run: () => api.install(a.id) };
+    if (a.updateAvailable) return { label: 'Get update', run: () => api.install(a.id) };
+    return { label: 'Open', run: () => api.open(a.id), open: true };
+  }
   if (!a.installed) return { label: 'Install', run: () => api.install(a.id) };
-  if (a.updateAvailable) return { label: a.updateReady && a.running ? 'Update now' : `Update to ${a.latest}`, run: () => api.install(a.id) };
-  return { label: a.running ? 'Show' : 'Play', run: () => api.open(a.id), open: true };
+  if (a.updateAvailable) return { label: a.updateReady && (a.running || IS_PHONE) ? 'Install update' : `Update to ${a.latest}`, run: () => api.install(a.id) };
+  return { label: a.running ? 'Show' : 'Open', run: () => api.open(a.id), open: true };
 }
 
 function Progress({ a }) {
@@ -119,7 +129,8 @@ function AppSettings({ a }) {
 
 function AppPage({ a }) {
   const [tab, setTab] = useState('overview');
-  const hasSettings = !a.comingSoon && a.installed;
+  // Only where the launcher can edit the app's own settings (Windows today)
+  const hasSettings = !!a.hasSettings && !a.comingSoon && a.installed;
   const action = primaryAction(a);
   const facts = [];
   if (a.installed) facts.push(['Installed', a.version]);
@@ -157,14 +168,20 @@ function AppPage({ a }) {
             </Magnet>
           </ClickSpark>
           {a.repo && <button className="link" onClick={() => api.github(a.id)}>Releases</button>}
-          {a.installed && !a.updateAvailable && !a.busy && <button className="link" onClick={() => api.install(a.id)}>Reinstall</button>}
-          {a.installed && !a.busy && <button className="link link-danger" onClick={() => api.uninstall(a.id)}>Uninstall</button>}
+          {PLATFORM !== 'ios' && a.installed && !a.updateAvailable && !a.busy && <button className="link" onClick={() => api.install(a.id)}>Reinstall</button>}
+          {a.canUninstall && a.installed && !a.busy && <button className="link link-danger" onClick={() => api.uninstall(a.id)}>Uninstall</button>}
         </div>
 
         {a.busy && <Progress a={a} />}
         {a.error && <p className="error">{a.error}</p>}
-        {a.updateAvailable && a.updateReady && a.running && (
+        {a.updateAvailable && a.updateReady && a.running && !IS_PHONE && (
           <p className="note">{a.latest} is downloaded and installs as soon as you close {a.name}.</p>
+        )}
+        {a.updateAvailable && a.updateReady && PLATFORM === 'android' && (
+          <p className="note">{a.latest} is downloaded. Tap Install update to finish.</p>
+        )}
+        {PLATFORM === 'ios' && !a.installed && !a.comingSoon && (
+          <p className="note">iPhones only install apps from a computer. Get it opens the download page, with steps.</p>
         )}
 
         {facts.length > 0 && (
@@ -176,7 +193,8 @@ function AppPage({ a }) {
       </section>
 
       <aside className="side">
-        <TiltedCard imageSrc={a.icon} altText="" containerHeight="240px" containerWidth="240px" imageHeight="240px" imageWidth="240px"
+        <TiltedCard imageSrc={a.icon} altText="" containerHeight={IS_PHONE ? '150px' : '240px'} containerWidth={IS_PHONE ? '150px' : '240px'}
+          imageHeight={IS_PHONE ? '150px' : '240px'} imageWidth={IS_PHONE ? '150px' : '240px'}
           rotateAmplitude={10} scaleOnHover={1.04} glare={0} shadow={0.45} showTooltip={false} flipOnClick={false} radius={36} parallax={0}
           intro trackWindow={false} gyroscope={false} />
         {a.comingSoon ? (
@@ -197,11 +215,8 @@ function AppPage({ a }) {
 }
 
 function Settings({ settings, onChange }) {
-  const rows = [
-    ['autoUpdate', 'Keep apps up to date', 'Downloads each new version as soon as it is released. It installs straight away, or the moment you close the app if it is open.'],
-    ['startWithWindows', 'Start with Windows', 'Opens in the tray when you sign in, so updates keep coming.'],
-    ['closeToTray', 'Close to tray', 'Closing the window keeps the launcher running in the tray.'],
-  ];
+  // Each launcher lists the settings that make sense on its device
+  const rows = (settings.rows || []).map((r) => [r.key, r.title, r.help]);
   return (
     <AnimatedContent key="settings" trigger="mount" distance={24} duration={0.55} ease="power3.out" className="page settings">
       <SplitText text="Settings" tag="h1" className="title" splitType="chars" delay={28} duration={0.7}
@@ -255,7 +270,7 @@ export default function App() {
     setApps(await api.refresh());
     setChecking(false);
   };
-  const changeSettings = async (patch) => setSettings({ ...(await api.setSettings(patch)), version: settings.version });
+  const changeSettings = async (patch) => setSettings({ ...(await api.setSettings(patch)), version: settings.version, rows: settings.rows });
 
   // Installed apps first, then the rest, then Settings
   const dockItems = useMemo(() => {

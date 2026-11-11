@@ -1,0 +1,9 @@
+# Copied in from ../src at build time (see .github/workflows/ios.yml)
+Resources/ui/
+Resources/catalog.json
+# Made by XcodeGen / xcodebuild
+Sources/Info.plist
+*.xcodeproj/
+build/
+Payload/
+*.ipa
