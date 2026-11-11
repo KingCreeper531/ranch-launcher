@@ -32,6 +32,7 @@ targets:
         # Every "urlScheme" in catalog.json, so the launcher can see which apps are installed
         LSApplicationQueriesSchemes:
           - ranchytm
+          - ranchyt
         UILaunchScreen:
           UIColorName: LaunchBackground
         UIStatusBarStyle: UIStatusBarStyleLightContent
