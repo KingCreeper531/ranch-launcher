@@ -33,6 +33,7 @@
     "name": "YouTube",
     "tagline": "Ad-free YouTube with SponsorBlock, dislike counts, picture-in-picture and Discord status.",
     "repo": "KingCreeper531/youtube-desktop",
+    "ios": { "assetPattern": "^YouTube-iOS-[0-9.]+\\.ipa$", "urlScheme": "ranchyt" },
     "assetPattern": "^YouTube-Setup-[0-9.]+\\.exe$",
     "uninstallName": "YouTube",
     "exeName": "YouTube.exe",
