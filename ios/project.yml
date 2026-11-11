@@ -33,6 +33,10 @@ targets:
         LSApplicationQueriesSchemes:
           - ranchytm
           - ranchyt
+
+          - ranchfb
+
+          - ranchtw
         UILaunchScreen:
           UIColorName: LaunchBackground
         UIStatusBarStyle: UIStatusBarStyleLightContent

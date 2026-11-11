@@ -4,8 +4,14 @@
     "name": "YouTube Music",
     "tagline": "Ad-free YouTube Music with Discord status, My Music, Spotify import and a free Song / Video switch.",
     "repo": "KingCreeper531/youtube-music-desktop",
-    "android": { "assetPattern": "^YouTube-Music-Android-[0-9.]+\\.apk$", "packageName": "io.github.kingcreeper531.ytmusic" },
-    "ios": { "assetPattern": "^YouTube-Music-iOS-[0-9.]+\\.ipa$", "urlScheme": "ranchytm" },
+    "android": {
+      "assetPattern": "^YouTube-Music-Android-[0-9.]+\\.apk$",
+      "packageName": "io.github.kingcreeper531.ytmusic"
+    },
+    "ios": {
+      "assetPattern": "^YouTube-Music-iOS-[0-9.]+\\.ipa$",
+      "urlScheme": "ranchytm"
+    },
     "assetPattern": "^YouTube-Music-Setup-[0-9.]+\\.exe$",
     "uninstallName": "YouTube Music",
     "exeName": "YouTube Music.exe",
@@ -13,19 +19,87 @@
     "accent": "#ff2d2d",
     "settingsFile": "%APPDATA%\\YouTube Music\\config.json",
     "settings": [
-      { "group": "Ad blocking" },
-      { "key": "adblock", "type": "toggle", "default": true, "label": "Block ads", "help": "Removes ads from the player and skips any that get through" },
-      { "key": "networkBlocking", "type": "toggle", "default": true, "label": "Block ad and tracker requests", "help": "Uses the EasyList and EasyPrivacy filter lists" },
-      { "key": "hideUpsells", "type": "toggle", "default": true, "label": "Hide Premium upsells", "help": "Banners and pop-ups asking you to subscribe" },
-      { "group": "Playback" },
-      { "key": "sponsorBlock", "type": "toggle", "default": true, "label": "SponsorBlock", "help": "Skips the non-music parts of music videos" },
-      { "key": "noAfkPause", "type": "toggle", "default": true, "label": "Never ask \"Are you still there?\"", "help": "Keeps playing in the background and when minimized" },
-      { "key": "closeToTray", "type": "toggle", "default": true, "label": "Close to tray", "help": "The X button hides the window and the music keeps playing" },
-      { "group": "Discord" },
-      { "key": "discord", "type": "toggle", "default": true, "label": "Show what I'm listening to", "help": "Your Discord status shows the song, artist and cover" },
-      { "key": "discordClientId", "type": "text", "default": "", "label": "Discord Application ID", "help": "From the Discord Developer Portal. Its name is what shows after \"Listening to\"", "placeholder": "e.g. 1234567890123456789", "pattern": "^\\d{0,22}$" },
-      { "key": "discordHidePaused", "type": "toggle", "default": false, "label": "Hide when paused", "help": "Off: your status shows the song with \"(Paused)\"" },
-      { "key": "discordShowButton", "type": "toggle", "default": true, "label": "\"Listen on YouTube Music\" button", "help": "Others can click it to open the song" }
+      {
+        "group": "Ad blocking"
+      },
+      {
+        "key": "adblock",
+        "type": "toggle",
+        "default": true,
+        "label": "Block ads",
+        "help": "Removes ads from the player and skips any that get through"
+      },
+      {
+        "key": "networkBlocking",
+        "type": "toggle",
+        "default": true,
+        "label": "Block ad and tracker requests",
+        "help": "Uses the EasyList and EasyPrivacy filter lists"
+      },
+      {
+        "key": "hideUpsells",
+        "type": "toggle",
+        "default": true,
+        "label": "Hide Premium upsells",
+        "help": "Banners and pop-ups asking you to subscribe"
+      },
+      {
+        "group": "Playback"
+      },
+      {
+        "key": "sponsorBlock",
+        "type": "toggle",
+        "default": true,
+        "label": "SponsorBlock",
+        "help": "Skips the non-music parts of music videos"
+      },
+      {
+        "key": "noAfkPause",
+        "type": "toggle",
+        "default": true,
+        "label": "Never ask \"Are you still there?\"",
+        "help": "Keeps playing in the background and when minimized"
+      },
+      {
+        "key": "closeToTray",
+        "type": "toggle",
+        "default": true,
+        "label": "Close to tray",
+        "help": "The X button hides the window and the music keeps playing"
+      },
+      {
+        "group": "Discord"
+      },
+      {
+        "key": "discord",
+        "type": "toggle",
+        "default": true,
+        "label": "Show what I'm listening to",
+        "help": "Your Discord status shows the song, artist and cover"
+      },
+      {
+        "key": "discordClientId",
+        "type": "text",
+        "default": "",
+        "label": "Discord Application ID",
+        "help": "From the Discord Developer Portal. Its name is what shows after \"Listening to\"",
+        "placeholder": "e.g. 1234567890123456789",
+        "pattern": "^\\d{0,22}$"
+      },
+      {
+        "key": "discordHidePaused",
+        "type": "toggle",
+        "default": false,
+        "label": "Hide when paused",
+        "help": "Off: your status shows the song with \"(Paused)\""
+      },
+      {
+        "key": "discordShowButton",
+        "type": "toggle",
+        "default": true,
+        "label": "\"Listen on YouTube Music\" button",
+        "help": "Others can click it to open the song"
+      }
     ]
   },
   {
@@ -33,7 +107,10 @@
     "name": "YouTube",
     "tagline": "Ad-free YouTube with SponsorBlock, dislike counts, picture-in-picture and Discord status.",
     "repo": "KingCreeper531/youtube-desktop",
-    "ios": { "assetPattern": "^YouTube-iOS-[0-9.]+\\.ipa$", "urlScheme": "ranchyt" },
+    "ios": {
+      "assetPattern": "^YouTube-iOS-[0-9.]+\\.ipa$",
+      "urlScheme": "ranchyt"
+    },
     "assetPattern": "^YouTube-Setup-[0-9.]+\\.exe$",
     "uninstallName": "YouTube",
     "exeName": "YouTube.exe",
@@ -41,30 +118,160 @@
     "accent": "#ff0033",
     "settingsFile": "%APPDATA%\\YouTube\\config.json",
     "settings": [
-      { "group": "Ad blocking" },
-      { "key": "adblock", "type": "toggle", "default": true, "label": "Block video ads", "help": "Removes ads from the player and skips any that get through" },
-      { "key": "networkBlocking", "type": "toggle", "default": true, "label": "Block ad and tracker requests", "help": "Uses the EasyList and EasyPrivacy filter lists" },
-      { "key": "hideFeedAds", "type": "toggle", "default": true, "label": "Hide sponsored cards", "help": "Ads in the home feed, search results and next to videos" },
-      { "key": "hideUpsells", "type": "toggle", "default": true, "label": "Hide Premium upsells", "help": "Banners and pop-ups asking you to subscribe" },
-      { "group": "SponsorBlock and dislikes" },
-      { "key": "sponsorBlock", "type": "toggle", "default": true, "label": "Skip sponsor segments", "help": "Sponsors, self-promotion and subscribe reminders. You can undo each skip" },
-      { "key": "sponsorBarMarkers", "type": "toggle", "default": true, "label": "Show segments on the progress bar", "help": "Coloured marks where the skips are" },
-      { "key": "dislikes", "type": "toggle", "default": true, "label": "Show dislike counts", "help": "Estimates from Return YouTube Dislike, with a like ratio bar" },
-      { "group": "Watching" },
-      { "key": "rememberSpeed", "type": "toggle", "default": true, "label": "Remember playback speed", "help": "The speed you pick carries over to the next video" },
-      { "key": "theaterMode", "type": "toggle", "default": false, "label": "Open videos in theater mode", "help": "The wider player, without going full screen" },
-      { "key": "hideEndCards", "type": "toggle", "default": false, "label": "Hide end-screen cards", "help": "The video tiles that cover the last seconds" },
-      { "key": "noAfkPause", "type": "toggle", "default": true, "label": "Never ask \"Continue watching?\"", "help": "Long playlists and music keep going" },
-      { "key": "backgroundPlay", "type": "toggle", "default": true, "label": "Keep playing when minimized", "help": "Also when the window is behind other windows" },
-      { "key": "hideShorts", "type": "toggle", "default": false, "label": "Hide Shorts", "help": "Removes Shorts shelves and the Shorts tab" },
-      { "key": "shortsAsVideos", "type": "toggle", "default": false, "label": "Open Shorts as normal videos", "help": "Off: Shorts open in the usual scrolling Shorts feed" },
-      { "key": "cleanShareLinks", "type": "toggle", "default": true, "label": "Clean share links", "help": "Removes the \"si=\" tracking code from copied links" },
-      { "key": "closeToTray", "type": "toggle", "default": false, "label": "Close to tray", "help": "The X button hides the window instead of quitting" },
-      { "group": "Discord" },
-      { "key": "discord", "type": "toggle", "default": true, "label": "Show what I'm watching", "help": "Your Discord status shows the video, channel and thumbnail" },
-      { "key": "discordClientId", "type": "text", "default": "", "label": "Discord Application ID", "help": "From the Discord Developer Portal. Name the application YouTube so it shows \"Watching YouTube\"", "placeholder": "e.g. 1234567890123456789", "pattern": "^\\d{0,22}$" },
-      { "key": "discordHidePaused", "type": "toggle", "default": false, "label": "Hide when paused", "help": "Off: your status shows the video with \"(Paused)\"" },
-      { "key": "discordShowButton", "type": "toggle", "default": true, "label": "\"Watch on YouTube\" button", "help": "Others can click it to open the video" }
+      {
+        "group": "Ad blocking"
+      },
+      {
+        "key": "adblock",
+        "type": "toggle",
+        "default": true,
+        "label": "Block video ads",
+        "help": "Removes ads from the player and skips any that get through"
+      },
+      {
+        "key": "networkBlocking",
+        "type": "toggle",
+        "default": true,
+        "label": "Block ad and tracker requests",
+        "help": "Uses the EasyList and EasyPrivacy filter lists"
+      },
+      {
+        "key": "hideFeedAds",
+        "type": "toggle",
+        "default": true,
+        "label": "Hide sponsored cards",
+        "help": "Ads in the home feed, search results and next to videos"
+      },
+      {
+        "key": "hideUpsells",
+        "type": "toggle",
+        "default": true,
+        "label": "Hide Premium upsells",
+        "help": "Banners and pop-ups asking you to subscribe"
+      },
+      {
+        "group": "SponsorBlock and dislikes"
+      },
+      {
+        "key": "sponsorBlock",
+        "type": "toggle",
+        "default": true,
+        "label": "Skip sponsor segments",
+        "help": "Sponsors, self-promotion and subscribe reminders. You can undo each skip"
+      },
+      {
+        "key": "sponsorBarMarkers",
+        "type": "toggle",
+        "default": true,
+        "label": "Show segments on the progress bar",
+        "help": "Coloured marks where the skips are"
+      },
+      {
+        "key": "dislikes",
+        "type": "toggle",
+        "default": true,
+        "label": "Show dislike counts",
+        "help": "Estimates from Return YouTube Dislike, with a like ratio bar"
+      },
+      {
+        "group": "Watching"
+      },
+      {
+        "key": "rememberSpeed",
+        "type": "toggle",
+        "default": true,
+        "label": "Remember playback speed",
+        "help": "The speed you pick carries over to the next video"
+      },
+      {
+        "key": "theaterMode",
+        "type": "toggle",
+        "default": false,
+        "label": "Open videos in theater mode",
+        "help": "The wider player, without going full screen"
+      },
+      {
+        "key": "hideEndCards",
+        "type": "toggle",
+        "default": false,
+        "label": "Hide end-screen cards",
+        "help": "The video tiles that cover the last seconds"
+      },
+      {
+        "key": "noAfkPause",
+        "type": "toggle",
+        "default": true,
+        "label": "Never ask \"Continue watching?\"",
+        "help": "Long playlists and music keep going"
+      },
+      {
+        "key": "backgroundPlay",
+        "type": "toggle",
+        "default": true,
+        "label": "Keep playing when minimized",
+        "help": "Also when the window is behind other windows"
+      },
+      {
+        "key": "hideShorts",
+        "type": "toggle",
+        "default": false,
+        "label": "Hide Shorts",
+        "help": "Removes Shorts shelves and the Shorts tab"
+      },
+      {
+        "key": "shortsAsVideos",
+        "type": "toggle",
+        "default": false,
+        "label": "Open Shorts as normal videos",
+        "help": "Off: Shorts open in the usual scrolling Shorts feed"
+      },
+      {
+        "key": "cleanShareLinks",
+        "type": "toggle",
+        "default": true,
+        "label": "Clean share links",
+        "help": "Removes the \"si=\" tracking code from copied links"
+      },
+      {
+        "key": "closeToTray",
+        "type": "toggle",
+        "default": false,
+        "label": "Close to tray",
+        "help": "The X button hides the window instead of quitting"
+      },
+      {
+        "group": "Discord"
+      },
+      {
+        "key": "discord",
+        "type": "toggle",
+        "default": true,
+        "label": "Show what I'm watching",
+        "help": "Your Discord status shows the video, channel and thumbnail"
+      },
+      {
+        "key": "discordClientId",
+        "type": "text",
+        "default": "",
+        "label": "Discord Application ID",
+        "help": "From the Discord Developer Portal. Name the application YouTube so it shows \"Watching YouTube\"",
+        "placeholder": "e.g. 1234567890123456789",
+        "pattern": "^\\d{0,22}$"
+      },
+      {
+        "key": "discordHidePaused",
+        "type": "toggle",
+        "default": false,
+        "label": "Hide when paused",
+        "help": "Off: your status shows the video with \"(Paused)\""
+      },
+      {
+        "key": "discordShowButton",
+        "type": "toggle",
+        "default": true,
+        "label": "\"Watch on YouTube\" button",
+        "help": "Others can click it to open the video"
+      }
     ]
   },
   {
@@ -72,12 +279,244 @@
     "name": "Ad Blocker",
     "tagline": "Blocks ads and trackers in every app on your PC or phone with one switch. No VPN.",
     "repo": "KingCreeper531/ranch-adblock",
-    "android": { "assetPattern": "^Ranch-AdBlock-Android-[0-9.]+\\.apk$", "packageName": "io.github.kingcreeper531.ranchadblock" },
-    "ios": { "assetPattern": "^Ranch-AdBlock-iOS-AdGuard\\.mobileconfig$" },
+    "android": {
+      "assetPattern": "^Ranch-AdBlock-Android-[0-9.]+\\.apk$",
+      "packageName": "io.github.kingcreeper531.ranchadblock"
+    },
+    "ios": {
+      "assetPattern": "^Ranch-AdBlock-iOS-AdGuard\\.mobileconfig$"
+    },
     "assetPattern": "^Ranch-AdBlock-Setup-[0-9.]+\\.exe$",
     "uninstallName": "Ranch Ad Blocker",
     "exeName": "Ranch Ad Blocker.exe",
     "icon": "icons/adblock.png",
     "accent": "#5cb84a"
+  },
+  {
+    "id": "facebook",
+    "name": "Facebook",
+    "tagline": "Facebook without ads, Reels or suggested clutter, with notifications in Windows.",
+    "repo": "KingCreeper531/facebook-desktop",
+    "ios": {
+      "assetPattern": "^Facebook-iOS-[0-9.]+\\.ipa$",
+      "urlScheme": "ranchfb"
+    },
+    "assetPattern": "^Facebook-Setup-[0-9.]+\\.exe$",
+    "uninstallName": "Facebook",
+    "exeName": "Facebook.exe",
+    "icon": "icons/facebook.png",
+    "accent": "#1877f2",
+    "settingsFile": "%APPDATA%\\Facebook\\config.json",
+    "settings": [
+      {
+        "group": "Ad blocking"
+      },
+      {
+        "key": "hideSponsored",
+        "type": "toggle",
+        "default": true,
+        "label": "Hide sponsored posts",
+        "help": "Ads in your feed, the sponsored column on the right and sponsored Marketplace listings"
+      },
+      {
+        "key": "networkBlocking",
+        "type": "toggle",
+        "default": true,
+        "label": "Block ad and tracker requests",
+        "help": "EasyList and EasyPrivacy filter lists"
+      },
+      {
+        "group": "Feed"
+      },
+      {
+        "key": "hideReels",
+        "type": "toggle",
+        "default": true,
+        "label": "Turn off Reels",
+        "help": "Hides Reels in your feed and the Reels shortcuts"
+      },
+      {
+        "key": "hideSuggested",
+        "type": "toggle",
+        "default": true,
+        "label": "Hide \"Suggested for you\"",
+        "help": "Posts from pages and groups you don't follow"
+      },
+      {
+        "key": "hidePeopleYouMayKnow",
+        "type": "toggle",
+        "default": true,
+        "label": "Hide \"People you may know\"",
+        "help": "Friend suggestions in your feed"
+      },
+      {
+        "key": "hideStories",
+        "type": "toggle",
+        "default": false,
+        "label": "Hide Stories",
+        "help": "The row of stories at the top of your feed"
+      },
+      {
+        "key": "hideMetaAI",
+        "type": "toggle",
+        "default": true,
+        "label": "Hide Meta AI",
+        "help": "Meta AI buttons and shortcuts"
+      },
+      {
+        "group": "Privacy"
+      },
+      {
+        "key": "skipLinkTracking",
+        "type": "toggle",
+        "default": true,
+        "label": "Open links without tracking",
+        "help": "Skips Facebook's link redirect and removes the fbclid code"
+      },
+      {
+        "group": "App"
+      },
+      {
+        "key": "notifications",
+        "type": "toggle",
+        "default": true,
+        "label": "Desktop notifications",
+        "help": "Messages and notifications show up in Windows"
+      },
+      {
+        "key": "unreadBadge",
+        "type": "toggle",
+        "default": true,
+        "label": "Unread badge",
+        "help": "A red dot on the taskbar icon when something is new"
+      },
+      {
+        "key": "closeToTray",
+        "type": "toggle",
+        "default": true,
+        "label": "Close to tray",
+        "help": "The X button hides the window so notifications keep coming"
+      }
+    ]
+  },
+  {
+    "id": "twitter",
+    "name": "Twitter",
+    "tagline": "Twitter without promoted posts, Grok or Premium upsells, with the classic look and the Following tab first.",
+    "repo": "KingCreeper531/twitter-desktop",
+    "ios": {
+      "assetPattern": "^Twitter-iOS-[0-9.]+\\.ipa$",
+      "urlScheme": "ranchtw"
+    },
+    "assetPattern": "^Twitter-Setup-[0-9.]+\\.exe$",
+    "uninstallName": "Twitter",
+    "exeName": "Twitter.exe",
+    "icon": "icons/twitter.png",
+    "accent": "#1d9bf0",
+    "settingsFile": "%APPDATA%\\Twitter\\config.json",
+    "settings": [
+      {
+        "group": "Ad blocking"
+      },
+      {
+        "key": "hidePromoted",
+        "type": "toggle",
+        "default": true,
+        "label": "Hide promoted posts",
+        "help": "Ads in your timeline, replies, search, trends and suggested accounts"
+      },
+      {
+        "key": "networkBlocking",
+        "type": "toggle",
+        "default": true,
+        "label": "Block ad and tracker requests",
+        "help": "EasyList and EasyPrivacy filter lists"
+      },
+      {
+        "group": "Look"
+      },
+      {
+        "key": "classicTwitter",
+        "type": "toggle",
+        "default": true,
+        "label": "Classic Twitter",
+        "help": "The blue bird logo and the old words: Tweet, Retweet, Tweets and \"What's happening?\""
+      },
+      {
+        "group": "Timeline"
+      },
+      {
+        "key": "followingByDefault",
+        "type": "toggle",
+        "default": true,
+        "label": "Open on Following",
+        "help": "Starts on the people you follow instead of For you"
+      },
+      {
+        "key": "hideWhoToFollow",
+        "type": "toggle",
+        "default": true,
+        "label": "Hide \"Who to follow\"",
+        "help": "Account suggestions in your timeline and the sidebar"
+      },
+      {
+        "key": "hideTrends",
+        "type": "toggle",
+        "default": false,
+        "label": "Hide trends",
+        "help": "The \"What's happening\" box in the sidebar"
+      },
+      {
+        "group": "Clutter"
+      },
+      {
+        "key": "hideGrok",
+        "type": "toggle",
+        "default": true,
+        "label": "Hide Grok",
+        "help": "Grok in the menu and the Grok buttons on posts"
+      },
+      {
+        "key": "hidePremium",
+        "type": "toggle",
+        "default": true,
+        "label": "Hide Premium upsells",
+        "help": "Subscribe and verification prompts"
+      },
+      {
+        "group": "Privacy"
+      },
+      {
+        "key": "skipLinkTracking",
+        "type": "toggle",
+        "default": true,
+        "label": "Open links directly",
+        "help": "Skips t.co and removes share-tracking codes"
+      },
+      {
+        "group": "App"
+      },
+      {
+        "key": "notifications",
+        "type": "toggle",
+        "default": true,
+        "label": "Desktop notifications",
+        "help": "Mentions, replies and messages show up in Windows"
+      },
+      {
+        "key": "unreadBadge",
+        "type": "toggle",
+        "default": true,
+        "label": "Unread badge",
+        "help": "A red dot on the taskbar icon when something is new"
+      },
+      {
+        "key": "closeToTray",
+        "type": "toggle",
+        "default": true,
+        "label": "Close to tray",
+        "help": "The X button hides the window so notifications keep coming"
+      }
+    ]
   }
 ]
