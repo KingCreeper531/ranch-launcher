@@ -1,0 +1,37 @@
+[
+  {
+    "id": "youtube-music",
+    "name": "YouTube Music",
+    "tagline": "Ad-free YouTube Music with Discord status, My Music, Spotify import and a free Song / Video switch.",
+    "repo": "KingCreeper531/youtube-music-desktop",
+    "assetPattern": "^YouTube-Music-Setup-[0-9.]+\\.exe$",
+    "uninstallName": "YouTube Music",
+    "exeName": "YouTube Music.exe",
+    "icon": "icons/youtube-music.png",
+    "accent": "#ff2d2d",
+    "settingsFile": "%APPDATA%\\YouTube Music\\config.json",
+    "settings": [
+      { "group": "Ad blocking" },
+      { "key": "adblock", "type": "toggle", "default": true, "label": "Block ads", "help": "Removes ads from the player and skips any that get through" },
+      { "key": "networkBlocking", "type": "toggle", "default": true, "label": "Block ad and tracker requests", "help": "Uses the EasyList and EasyPrivacy filter lists" },
+      { "key": "hideUpsells", "type": "toggle", "default": true, "label": "Hide Premium upsells", "help": "Banners and pop-ups asking you to subscribe" },
+      { "group": "Playback" },
+      { "key": "sponsorBlock", "type": "toggle", "default": true, "label": "SponsorBlock", "help": "Skips the non-music parts of music videos" },
+      { "key": "noAfkPause", "type": "toggle", "default": true, "label": "Never ask \"Are you still there?\"", "help": "Keeps playing in the background and when minimized" },
+      { "key": "closeToTray", "type": "toggle", "default": true, "label": "Close to tray", "help": "The X button hides the window and the music keeps playing" },
+      { "group": "Discord" },
+      { "key": "discord", "type": "toggle", "default": true, "label": "Show what I'm listening to", "help": "Your Discord status shows the song, artist and cover" },
+      { "key": "discordClientId", "type": "text", "default": "", "label": "Discord Application ID", "help": "From the Discord Developer Portal. Its name is what shows after \"Listening to\"", "placeholder": "e.g. 1234567890123456789", "pattern": "^\\d{0,22}$" },
+      { "key": "discordHidePaused", "type": "toggle", "default": false, "label": "Hide when paused", "help": "Off: your status shows the song with \"(Paused)\"" },
+      { "key": "discordShowButton", "type": "toggle", "default": true, "label": "\"Listen on YouTube Music\" button", "help": "Others can click it to open the song" }
+    ]
+  },
+  {
+    "id": "youtube",
+    "name": "YouTube",
+    "tagline": "Ad-free YouTube with SponsorBlock, background play and no Shorts clutter.",
+    "comingSoon": true,
+    "icon": "icons/coming-soon.png",
+    "accent": "#7a7a7a"
+  }
+]

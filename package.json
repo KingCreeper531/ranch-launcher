@@ -1,0 +1,55 @@
+{
+  "name": "ranch-launcher",
+  "productName": "Ranch Launcher",
+  "version": "0.1.0",
+  "description": "Installs, updates and launches Ranch apps (YouTube Music and more)",
+  "main": "src/main.js",
+  "author": "KingCreeper531",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build:ui": "vite build --config renderer/vite.config.mjs",
+    "start": "npm run build:ui && electron .",
+    "dist": "npm run build:ui && electron-builder --win"
+  },
+  "devDependencies": {
+    "@fontsource-variable/fraunces": "^5.2.5",
+    "@gsap/react": "^2.1.2",
+    "@vitejs/plugin-react": "^5.0.0",
+    "electron": "45.2.3",
+    "electron-builder": "26.18.0",
+    "gsap": "^3.13.0",
+    "motion": "^12.23.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "vite": "^7.1.0"
+  },
+  "build": {
+    "appId": "local.ranch.launcher",
+    "productName": "Ranch Launcher",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "build/icon.png",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "artifactName": "Ranch-Launcher-Setup-${version}.${ext}",
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Ranch Launcher",
+      "runAfterFinish": true
+    }
+  }
+}

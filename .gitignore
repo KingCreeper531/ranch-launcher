@@ -1,0 +1,5 @@
+node_modules/
+dist/
+# built from renderer/ by Vite
+src/ui/
+
