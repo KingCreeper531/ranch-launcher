@@ -37,6 +37,9 @@ targets:
           - ranchfb
 
           - ranchtw
+
+
+          - ranchig
         UILaunchScreen:
           UIColorName: LaunchBackground
         UIStatusBarStyle: UIStatusBarStyleLightContent

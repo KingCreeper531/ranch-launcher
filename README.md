@@ -13,6 +13,7 @@ Every app has a Windows installer (`.exe`), an Android app (`.apk`) and an iPhon
 | [Ad Blocker](https://github.com/KingCreeper531/ranch-adblock) | One switch that blocks ads and trackers in every app and browser on the device, using AdGuard DNS or Mullvad DNS. No VPN, and nothing runs in the background. On iPhone it's a DNS profile you install. |
 | [Facebook](https://github.com/KingCreeper531/facebook-desktop) | Facebook with no sponsored posts, Reels turned off, and no "Suggested for you", "People you may know" or Meta AI. Links open without Facebook's tracking. Windows notifications and an unread badge. |
 | [Twitter](https://github.com/KingCreeper531/twitter-desktop) | Twitter (x.com) with no promoted posts, Grok or Premium upsells. **Classic Twitter** brings back the blue bird, Tweet and Retweet. Opens on Following instead of For you, and links skip t.co. Windows notifications and an unread badge. |
+| [Instagram](https://github.com/KingCreeper531/instagram-desktop) | Instagram with no sponsored posts and Reels turned off. Opens on your **Following** feed (people you follow, newest first) instead of suggestions, and hides "Suggested for you", Threads and Meta AI. Links open and copy without tracking. Windows notifications and an unread badge. |
 
 ## What the launcher does
 

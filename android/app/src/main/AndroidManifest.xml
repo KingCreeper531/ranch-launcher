@@ -12,6 +12,7 @@
         <package android:name="io.github.kingcreeper531.youtube" />
         <package android:name="io.github.kingcreeper531.facebook" />
         <package android:name="io.github.kingcreeper531.twitter" />
+        <package android:name="io.github.kingcreeper531.instagram" />
     </queries>
 
     <application
