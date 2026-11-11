@@ -65,5 +65,18 @@
       { "key": "discordHidePaused", "type": "toggle", "default": false, "label": "Hide when paused", "help": "Off: your status shows the video with \"(Paused)\"" },
       { "key": "discordShowButton", "type": "toggle", "default": true, "label": "\"Watch on YouTube\" button", "help": "Others can click it to open the video" }
     ]
+  },
+  {
+    "id": "adblock",
+    "name": "Ad Blocker",
+    "tagline": "Blocks ads and trackers in every app on your PC or phone with one switch. No VPN.",
+    "repo": "KingCreeper531/ranch-adblock",
+    "android": { "assetPattern": "^Ranch-AdBlock-Android-[0-9.]+\\.apk$", "packageName": "io.github.kingcreeper531.ranchadblock" },
+    "ios": { "assetPattern": "^Ranch-AdBlock-iOS-AdGuard\\.mobileconfig$" },
+    "assetPattern": "^Ranch-AdBlock-Setup-[0-9.]+\\.exe$",
+    "uninstallName": "Ranch Ad Blocker",
+    "exeName": "Ranch Ad Blocker.exe",
+    "icon": "icons/adblock.png",
+    "accent": "#5cb84a"
   }
 ]

@@ -8,6 +8,7 @@
     <!-- Android 11+ only lets us see (and open) the apps we name here -->
     <queries>
         <package android:name="io.github.kingcreeper531.ytmusic" />
+        <package android:name="io.github.kingcreeper531.ranchadblock" />
     </queries>
 
     <application
