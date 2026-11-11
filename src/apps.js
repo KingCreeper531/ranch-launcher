@@ -92,7 +92,9 @@ async function detect() {
   const entries = await installedEntries();
   for (const a of catalog) {
     if (a.comingSoon) continue;
-    const e = entries.find((x) => x.DisplayName === a.uninstallName || x.DisplayName.startsWith(`${a.uninstallName} `));
+    // "YouTube 1.0.0" is YouTube, but "YouTube Music 1.1.6" is not: only a version may follow the name
+    const named = new RegExp(`^${a.uninstallName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\s+v?\\d[\\d.]*)?$`);
+    const e = entries.find((x) => named.test(x.DisplayName));
     const exePath = e ? exeFromEntry(e, a.exeName) : null;
     if (e && exePath) {
       set(a.id, {

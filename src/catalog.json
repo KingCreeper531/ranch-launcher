@@ -31,9 +31,39 @@
   {
     "id": "youtube",
     "name": "YouTube",
-    "tagline": "Ad-free YouTube with SponsorBlock, background play and no Shorts clutter.",
-    "comingSoon": true,
-    "icon": "icons/coming-soon.png",
-    "accent": "#7a7a7a"
+    "tagline": "Ad-free YouTube with SponsorBlock, dislike counts, picture-in-picture and Discord status.",
+    "repo": "KingCreeper531/youtube-desktop",
+    "assetPattern": "^YouTube-Setup-[0-9.]+\\.exe$",
+    "uninstallName": "YouTube",
+    "exeName": "YouTube.exe",
+    "icon": "icons/youtube.png",
+    "accent": "#ff0033",
+    "settingsFile": "%APPDATA%\\YouTube\\config.json",
+    "settings": [
+      { "group": "Ad blocking" },
+      { "key": "adblock", "type": "toggle", "default": true, "label": "Block video ads", "help": "Removes ads from the player and skips any that get through" },
+      { "key": "networkBlocking", "type": "toggle", "default": true, "label": "Block ad and tracker requests", "help": "Uses the EasyList and EasyPrivacy filter lists" },
+      { "key": "hideFeedAds", "type": "toggle", "default": true, "label": "Hide sponsored cards", "help": "Ads in the home feed, search results and next to videos" },
+      { "key": "hideUpsells", "type": "toggle", "default": true, "label": "Hide Premium upsells", "help": "Banners and pop-ups asking you to subscribe" },
+      { "group": "SponsorBlock and dislikes" },
+      { "key": "sponsorBlock", "type": "toggle", "default": true, "label": "Skip sponsor segments", "help": "Sponsors, self-promotion and subscribe reminders. You can undo each skip" },
+      { "key": "sponsorBarMarkers", "type": "toggle", "default": true, "label": "Show segments on the progress bar", "help": "Coloured marks where the skips are" },
+      { "key": "dislikes", "type": "toggle", "default": true, "label": "Show dislike counts", "help": "Estimates from Return YouTube Dislike, with a like ratio bar" },
+      { "group": "Watching" },
+      { "key": "rememberSpeed", "type": "toggle", "default": true, "label": "Remember playback speed", "help": "The speed you pick carries over to the next video" },
+      { "key": "theaterMode", "type": "toggle", "default": false, "label": "Open videos in theater mode", "help": "The wider player, without going full screen" },
+      { "key": "hideEndCards", "type": "toggle", "default": false, "label": "Hide end-screen cards", "help": "The video tiles that cover the last seconds" },
+      { "key": "noAfkPause", "type": "toggle", "default": true, "label": "Never ask \"Continue watching?\"", "help": "Long playlists and music keep going" },
+      { "key": "backgroundPlay", "type": "toggle", "default": true, "label": "Keep playing when minimized", "help": "Also when the window is behind other windows" },
+      { "key": "hideShorts", "type": "toggle", "default": false, "label": "Hide Shorts", "help": "Removes Shorts shelves and the Shorts tab" },
+      { "key": "shortsAsVideos", "type": "toggle", "default": false, "label": "Open Shorts as normal videos", "help": "Off: Shorts open in the usual scrolling Shorts feed" },
+      { "key": "cleanShareLinks", "type": "toggle", "default": true, "label": "Clean share links", "help": "Removes the \"si=\" tracking code from copied links" },
+      { "key": "closeToTray", "type": "toggle", "default": false, "label": "Close to tray", "help": "The X button hides the window instead of quitting" },
+      { "group": "Discord" },
+      { "key": "discord", "type": "toggle", "default": true, "label": "Show what I'm watching", "help": "Your Discord status shows the video, channel and thumbnail" },
+      { "key": "discordClientId", "type": "text", "default": "", "label": "Discord Application ID", "help": "From the Discord Developer Portal. Name the application YouTube so it shows \"Watching YouTube\"", "placeholder": "e.g. 1234567890123456789", "pattern": "^\\d{0,22}$" },
+      { "key": "discordHidePaused", "type": "toggle", "default": false, "label": "Hide when paused", "help": "Off: your status shows the video with \"(Paused)\"" },
+      { "key": "discordShowButton", "type": "toggle", "default": true, "label": "\"Watch on YouTube\" button", "help": "Others can click it to open the video" }
+    ]
   }
 ]
