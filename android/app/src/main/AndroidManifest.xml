@@ -9,6 +9,9 @@
     <queries>
         <package android:name="io.github.kingcreeper531.ytmusic" />
         <package android:name="io.github.kingcreeper531.ranchadblock" />
+        <package android:name="io.github.kingcreeper531.youtube" />
+        <package android:name="io.github.kingcreeper531.facebook" />
+        <package android:name="io.github.kingcreeper531.twitter" />
     </queries>
 
     <application
