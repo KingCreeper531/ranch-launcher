@@ -226,6 +226,13 @@
         "help": "Off: Shorts open in the usual scrolling Shorts feed"
       },
       {
+        "key": "oldShortsUi",
+        "type": "toggle",
+        "default": false,
+        "label": "Old Shorts look",
+        "help": "Like, comments and share in white on top of the video, like the old phone layout"
+      },
+      {
         "key": "cleanShareLinks",
         "type": "toggle",
         "default": true,
